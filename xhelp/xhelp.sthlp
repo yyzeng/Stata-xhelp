@@ -28,6 +28,7 @@ Tools to create and display translated help files
 {cmd:xhelp} [{it:command-or-topic-name}] [{cmd:,}
   {opt non:ew} {opt name(viewername)} 
   {opt mark:er(markername)} {opt l:ang(version)} 
+  {opt install} {opt install(path-to-xhelp_sthlps.zip)} 
   {opt edit} {opt noihlp} {opt p:ersonal}]
 {p_end}
 
@@ -36,8 +37,8 @@ Tools to create and display translated help files
 {title:Description}
 
 {pstd}
-The {cmd:xhelp} command provides some tools to {bf:create} and {bf:display} 
-translated help files with two main modes:
+The {cmd:xhelp} command provides some tools to {bf:install}, {bf:create} and {bf:display} 
+translated help files with three main modes:
 
 {pstd}
 In {it:edit mode}, {cmd:xhelp} finds, copies and renames the specified 
@@ -46,6 +47,10 @@ working directory or the PERSONAL adopath and then opens it/them with Do-file
 editor for your editing. You can translate the file(s) into target language 
 (such as Chinese) while conveniently retaining the original formatting 
 {help smcl:SMCL} directives.
+
+{pstd}
+In {it:install mode}, {cmd:xhelp} installs the pre-packaged translated help 
+file(s) into the the PLUS adopath.
 
 {pstd}
 In {it:view mode}, {cmd:xhelp} depends on the official command {bf:{help help}} 
@@ -79,6 +84,14 @@ When not set, it is "{it:zh}" by default (for Chinese). {cmd:xhelp}
 calls the command {cmd:findfile} to find {it:command-or-topic-name_version.sthlp} 
 along the {bf:{stata adopath:ADOPATH}} - when unvailable, the fallback 
 original version will be shown instead.
+
+{dlgtab:Install Mode}
+
+{p 4 8 2}{opt install} starts the {it:install mode}. {cmd:xhelp} will unzip and install the 
+pre-packaged help files (i.e., xhelp_sthlps.zip) in the working directory into the PLUS adopath.
+
+{p 4 8 2}{opt install(path-to-xhelp_sthlps.zip)} also starts the {it:install mode}, but in this case, 
+you can specify the specific path of the translated help archive.
 
 {dlgtab:Edit Mode}
 
@@ -126,7 +139,17 @@ display the {it:fr} version help file of {it:command-or-topic-name}. When
 not found, Stata will invoke {cmd:help {it:command-or-topic-name}} instead.
 {p_end}
 
-{p 4 7 2}{ul:2. {it:Edit Mode}}:{p_end}
+{p 4 7 2}{ul:2. {it:Install Mode}}:{p_end}
+
+{p 8 10 2}
+- You switch to the {it:install mode} via setting option {opt install} or {opt install(path-to-xhelp_sthlps.zip)}.
+{p_end}
+
+{p 8 10 2}
+- Usually, you only need to run the {it:install mode} once.
+{p_end}
+
+{p 4 7 2}{ul:3. {it:Edit Mode}}:{p_end}
 
 {p 8 10 2}
 - You shall set option {opt edit} explicitly to switch on the {it:edit mode}. 
@@ -156,6 +179,8 @@ so as to modify its default behavior.
 {phang}{cmd:. }{bf:{stata xhelp import excel}}{p_end}
 {phang}{cmd:. }{bf:{stata xhelp help, l(CN)}}{p_end}
 {phang}{cmd:. }{bf:{stata xhelp importing}}{p_end}
+{phang}{cmd:. xhelp, install}{space 9} // edit mode, don't run {p_end}
+{phang}{cmd:. xhelp, install(C:\Users\xxx\Desktop\Stata-xhelp\xhelp_sthlps.zip)}{space 2} // edit mode, don't run {p_end}
 {phang}{cmd:. xhelp su, edit}{space 9} // edit mode, don't run {p_end}
 {phang}{cmd:. xhelp import excel, edit}{space 2} // edit mode, don't run {p_end}
 {phang}{cmd:. xhelp sum(), edit l(zh_CN)}{space 2} // edit mode, don't run {p_end}
@@ -179,5 +204,5 @@ so as to modify its default behavior.
 {pstd}China, PR.{p_end}
 
 {.-}
-{pstd}version 0.1 @ 2022-06-20{p_end}
-{center:{c 169} 2022 YongyiZeng}
+{pstd}version 1.0 @ 2026-03-08{p_end}
+{center:{c 169} 2026 YongyiZeng}
