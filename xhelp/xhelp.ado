@@ -1,5 +1,8 @@
 *! ==================================================================
-*!       xhelp to create and view translated help files
+*!     xhelp to create, install and view translated help files
+*! ==================================================================
+*! version 1.0, 2026-03-07, yyzeng <zzyy@xmu.edu.cn>
+*！  - add `install` option
 *! ==================================================================
 *! version 0.1, 2022-06-20, yyzeng <zzyy@xmu.edu.cn>
 *! ==================================================================
@@ -8,10 +11,26 @@ program xhelp
   version 9
   syntax [anything(everything)]           ///
          [, noNew name(name) MARKer(name) ///
-            Lang(string) edit noIHLP Personal]
+            Lang(string) install INSTALL2(string) edit noIHLP Personal]
   
-  if "`edit'" == "edit" & "`new'`name'`marker'" != "" {
-    di as err "-edit- and view options " _c
+  if "`edit'" == "edit" & ("`install'" != "" | `"`install2'"' != "") {
+    di as err "-edit- and -install- " _c
+    error 184
+  }
+  
+  if ("`edit'" == "edit" | ("`install'" != "" | `"`install2'"' != "")) &  ///
+      "`new'`name'`marker'" != "" {
+    di as err "-view- options and -edit- / -install- " _c
+    error 184
+  }
+  
+  if ("`install'" != "" & `"`install2'"' != "") {
+    di as err "It may be a mistake to duplicate -install- options -- " _c
+    error 184
+  }
+
+  if ("`install'" != "" | `"`install2'"' != "") & "`anything'" != "" {
+    di as err "It may be a mistake to specify {it:`anything'} when in -install- mode -- " _c
     error 184
   }
   
@@ -31,6 +50,14 @@ program xhelp
       exit 197
     }
     xhelp_edit `hlp', lang(`lang') `ihlp' `personal'
+  }
+  else if ("`install'" != "" | `"`install2'"' != "")  {  // install mode
+    if "`install'" != "" {
+      xhelp_install, from(`install')
+    }
+    else {
+      xhelp_install, from(`"`install2'"')
+    }
   }
   else { // view mode
     capture findfile `hlp'_`lang'.sthlp
@@ -324,6 +351,35 @@ program define ihlps
       }
       file read `fh' line
     }
+  }
+  
+end
+
+// ********************************************************
+// subprogram: xhelp_install
+//             install pre-packaged translated .sthlps
+// --------------------------------------------------------
+program define xhelp_install
+  syntax, from(string)
+  
+  if `"`from'"' == "install" { // xhelp_sthlps.zip not specified
+     local zfile = `"`=c(pwd)'\xhelp_sthlps.zip"'
+  }
+  else local zfile = `"`from'"'
+  
+  local PWD `c(pwd)'
+  quietly {
+    copy `"`zfile'"' `"`=c(sysdir_plus)'\xhelp_sthlps.zip"', replace
+    cd `"`=c(sysdir_plus)'"'
+    copy xhelp_sthlps.zip ..\xhelp_sthlps.zip, replace
+    cd ..
+    capture unzipfile xhelp_sthlps.zip, replace
+    if _rc == 0 {
+      noisily di as text "successfully unzipped xhelp_sthlps.zip to " `"`=c(sysdir_plus)'"'
+      noisily di as text "total file(s) extracted: " r(extracted)
+    }
+    capture erase xhelp_sthlps.zip
+    cd `"`PWD'"'
   }
   
 end
