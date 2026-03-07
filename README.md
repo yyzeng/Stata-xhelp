@@ -5,7 +5,8 @@
 
 本项目从 Stata 的 base 目录中收集 `.sthlp` 帮助文档，并通过调用 **大语言模型 API** 进行批量翻译。
 
-翻译完成后，所有文档被打包为 Stata 扩展命令 **`xhelp`**。用户只需运行提供的 `do` 文件即可完成安装，并将其放入 Stata 的 `PLUS` 文件夹中，从而在 Stata 环境中直接调用。
+翻译完成后，所有文档被打包为 Stata 扩展命令 **`xhelp`**。用户只需按以下步骤说明即可完成 `xhelp` 命令安装，
+并将预翻译的帮助文档放入 Stata 的系统文件夹 `PLUS` 中，从而在 Stata 环境中直接调用。
 
 ---
 
@@ -51,23 +52,21 @@ sysdir set PLUS "DIRECTORY"
 
 ---
 
-## 3️⃣ 安装 xhelp
+## 3️⃣ 安装 xhelp 命令及其预打包的翻译版帮助文档
 
-1. 使用 Stata 打开下载文件中的 **安装 do 文件**（文件名为 `install_xhelp.do`）。该文件的内容如下：
+1. 安装 `xhelp` 命令：
 
  ```stata
- forvalues i = 1/76{
-     net install xhelp`i', from("dictionary") replace  //dictionary 改为你下载后的 xhelp 文件夹的位置
- }
+ net from "xhelp 文件夹的路径"
+ net install xhelp.pkg  // 也可点击相应链接进行安装
  ```
    
-2. 修改 do 文件中的 `dictionary` 路径（上面代码中 `from()` 内的路径）为本地 `xhelp` 文件夹的地址
-3. 运行该 do 文件完成安装
+2. 安装预打包的翻译版帮助文档
 
-说明：
-
-- `dictionary`：指向下载后 **xhelp 文件夹的路径**
-- `replace` 选项：用于覆盖已有安装（如不需要可删除）
+ ```stata
+ net get xhelp.pkg
+ xhelp, install
+ ```
 
 ---
 
